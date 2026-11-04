@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <circle cx="40" cy="40" r="37" fill="#fff8ef" stroke="#9a3412" stroke-width="2.5"/>
+  <circle cx="40" cy="40" r="31" fill="none" stroke="#9a3412" stroke-width="1" stroke-dasharray="2 3"/>
+  <text x="40" y="47" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-style="italic" fill="#9a3412">AE</text>
+</svg>

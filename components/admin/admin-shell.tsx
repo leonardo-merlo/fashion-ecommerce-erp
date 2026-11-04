@@ -82,7 +82,7 @@ export function AdminShell({ openOrders, lowStock, notifications, fontClassName,
           <AdminIcon name="menu" size={18} />
         </button>
         <span className="sidebar-logo">
-          <Image src="/images/logo/logo-v2.png" alt="" width={28} height={28} aria-hidden="true" />
+          <Image src="/images/logo/logo.svg" alt="" width={28} height={28} aria-hidden="true" />
         </span>
         <span className="admin-mobile-title">Ateliê Exemplo</span>
       </header>

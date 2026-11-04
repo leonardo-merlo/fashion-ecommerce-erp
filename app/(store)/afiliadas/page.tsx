@@ -79,7 +79,7 @@ export default function AfiliadasPage() {
       {/* ── SEÇÃO 1 — HERO ─────────────────────────────────────────────────── */}
       <section className="relative flex min-h-[540px] flex-col overflow-hidden md:min-h-[740px]">
         <Image
-          src="/images/refs2/hero-oficial.png"
+          src="/images/hero/hero-2.jpg"
           alt="Afiliadas Ateliê Exemplo"
           fill
           className="object-cover object-[65%_center]"
@@ -169,7 +169,7 @@ export default function AfiliadasPage() {
             <div className="relative hidden md:block">
               <div className="absolute inset-x-0 top-5 bottom-10 overflow-hidden rounded-xl">
                 <Image
-                  src="/images/refs2/afiliadas-comofunciona.jpeg"
+                  src="/images/atelie/afiliadas-loja.jpg"
                   alt="Como funciona o programa de afiliadas"
                   fill
                   className="object-cover object-[center_40%]"
@@ -183,7 +183,7 @@ export default function AfiliadasPage() {
       {/* ── SEÇÃO 4 — POR QUE FAZER PARTE? ──────────────────────────────── */}
       <section className="relative overflow-hidden">
         <Image
-          src="/images/refs2/afiliadas-hero.png"
+          src="/images/atelie/afiliadas-hero.jpg"
           alt="Por que ser afiliado Ateliê Exemplo"
           fill
           className="object-cover object-[center_65%]"

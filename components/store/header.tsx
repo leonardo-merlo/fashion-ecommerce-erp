@@ -32,7 +32,7 @@ export function Header() {
           aria-label="Ateliê Exemplo, página inicial"
         >
           <Image
-            src="/images/logo/logo-v2.png"
+            src="/images/logo/logo.svg"
             alt="Ateliê Exemplo"
             width={80}
             height={64}

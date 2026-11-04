@@ -27,11 +27,11 @@ export const metadata: Metadata = {
     siteName: 'Ateliê Exemplo',
     locale: 'pt_BR',
     type: 'website',
-    images: ['/images/refs2/hero-oficial.png'],
+    images: ['/images/hero/hero-2.jpg'],
   },
   twitter: {
     card: 'summary_large_image',
-    images: ['/images/refs2/hero-oficial.png'],
+    images: ['/images/hero/hero-2.jpg'],
   },
 }
 
