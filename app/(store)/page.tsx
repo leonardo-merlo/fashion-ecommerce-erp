@@ -1,0 +1,123 @@
+import Image from "next/image"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ProductCard } from "@/components/store/product-card"
+import { HeroCarousel } from "@/components/store/hero-carousel"
+import { CitySection } from "@/components/store/city-section"
+import { getFeaturedProducts } from "@/lib/supabase/products"
+import { getStoreSettings } from "@/lib/server/store-settings"
+
+const CATEGORIES = [
+  {
+    name: "Lançamentos",
+    href: "/lancamentos",
+    description: "Peças que acabaram de chegar",
+    image: "/images/products/imagens/produto_pagina_48_vestido_dani_0.jpeg",
+    overlay: "bg-amber-900/35",
+  },
+  {
+    name: "Bolsas",
+    href: "/bolsas",
+    description: "Tiracolo, tote, clutch",
+    image: "/images/products/imagens/bolsa_flora_vinho_0.jpeg",
+    overlay: "bg-red-900/35",
+  },
+  {
+    name: "Vestuário",
+    href: "/vestuario",
+    description: "Vestidos, batas, macacões, saias",
+    image: "/images/products/imagens/produto_pagina_79_bata_asteca_0.jpeg",
+    overlay: "bg-blue-900/35",
+  },
+  {
+    name: "Infantil",
+    href: "/infantil",
+    description: "Batas e vestidos infantis",
+    image: "/images/products/imagens/produto_pagina_100_bata_bia_0.jpeg",
+    overlay: "bg-pink-900/35",
+  },
+  {
+    name: "Almofadas",
+    href: "/almofadas",
+    description: "Bordadas à mão, para a casa",
+    image: "/images/products/imagens/produto_pagina_45_vestido_havana_0.jpeg",
+    overlay: "bg-green-900/35",
+  },
+  {
+    name: "Bazar",
+    href: "/bazar",
+    description: "Coleções anteriores, pouca quantidade",
+    image: "/images/products/imagens/bolsa_nirvana_marinho_0.jpeg",
+    overlay: "bg-orange-900/35",
+  },
+]
+
+export default async function HomePage() {
+  const [FEATURED, settings] = await Promise.all([
+    // Oito, e não quinze: a grade tem 4 colunas, então qualquer número fora da
+    // tabuada de 4 deixa buraco na última linha.
+    getFeaturedProducts(8),
+    getStoreSettings().catch(() => null),
+  ])
+  const showLowStockWarning = settings?.show_low_stock_warning ?? false
+
+  return (
+    <>
+      {/* Hero carousel */}
+      <HeroCarousel />
+
+      {/* Categorias */}
+      <section className="mx-auto max-w-container px-margin-mobile py-16 md:px-margin-desktop">
+        <p className="mb-2 font-label-md text-label-md uppercase tracking-widest text-primary">Bolsas, roupas e casa</p>
+        <h2 className="mb-8 font-display-lg text-[28px] font-normal md:text-[38px] text-on-surface">Categorias</h2>
+
+        <div className="grid grid-cols-2 gap-gutter md:grid-cols-3">
+          {CATEGORIES.map(({ name, href, description, image, overlay }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group relative flex aspect-square flex-col overflow-hidden rounded-xl transition-opacity hover:opacity-90"
+            >
+              <Image
+                src={image}
+                alt={name}
+                fill
+                className="object-cover"
+                aria-hidden
+              />
+              {/* Color tint over full card */}
+              <div className={`absolute inset-0 ${overlay}`} />
+              {/* Gradient at bottom to make text pop */}
+              <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-black/70 to-transparent" />
+              <div className="relative z-10 mt-auto p-3 text-left md:p-6">
+                <p className="text-sm font-semibold uppercase tracking-wider text-white md:text-2xl">{name}</p>
+                <p className="mt-0.5 text-sm text-white/85 md:mt-1.5 md:text-lg">{description}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Destaques — 2 colunas no celular, 4 no desktop */}
+      <section className="mx-auto max-w-container px-margin-mobile pb-20 md:px-margin-desktop">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <p className="mb-2 font-label-md text-label-md uppercase tracking-widest text-primary">Escolhas da loja</p>
+            <h2 className="font-display-lg text-[28px] font-normal md:text-[38px] text-on-surface">Destaques</h2>
+          </div>
+          <Button variant="outline" asChild className="rounded-[30px]">
+            <Link href="/destaques">Ver tudo</Link>
+          </Button>
+        </div>
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
+          {FEATURED.map((product) => (
+            <ProductCard key={product.id} product={product} compact showLowStockWarning={showLowStockWarning} />
+          ))}
+        </div>
+      </section>
+
+      {/* Presença nacional */}
+      <CitySection />
+    </>
+  )
+}

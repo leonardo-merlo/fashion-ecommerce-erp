@@ -1,0 +1,208 @@
+"use client"
+
+import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { AdminIcon } from './admin-icon'
+import { SidebarPopover } from './sidebar-popover'
+import { NotificationsMenu } from './notifications-menu'
+import { CONFIG_SECTIONS, configSectionHref } from '@/lib/config-sections'
+import type { AdminNotification } from '@/lib/actions/notifications'
+
+interface AdminSidebarProps {
+  openOrders: number
+  lowStock: number
+  notifications: AdminNotification[]
+  mobileOpen: boolean
+  collapsed: boolean
+  onToggleCollapsed: () => void
+  onNavigate: () => void
+  /** A confirmação de saída vive no shell: modal com position:fixed dentro do
+   *  <aside> quebra no celular, onde a barra tem transform e passa a ser o
+   *  bloco de contenção do backdrop. */
+  onLogoutClick: () => void
+}
+
+const secondaryNav = [
+  { href: '/admin/financeiro', label: 'Financeiro', icon: 'wallet' as const },
+  { href: '/admin/vendas', label: 'Vendas', icon: 'trendUp' as const },
+  { href: '/admin/afiliados', label: 'Afiliadas', icon: 'tag' as const },
+  { href: '/admin/cupons', label: 'Cupons', icon: 'creditCard' as const },
+  { href: '/admin/clientes', label: 'Clientes', icon: 'users' as const },
+  { href: '/admin/fornecedores', label: 'Fornecedores', icon: 'truck' as const },
+]
+
+export function AdminSidebar({
+  openOrders,
+  lowStock,
+  notifications,
+  mobileOpen,
+  collapsed,
+  onToggleCollapsed,
+  onNavigate,
+  onLogoutClick,
+}: AdminSidebarProps) {
+  const pathname = usePathname()
+  const [configOpen, setConfigOpen] = useState(false)
+
+  const isActive = (href: string) => {
+    if (href === '/admin') return pathname === '/admin'
+    return pathname.startsWith(href)
+  }
+
+  const primaryNav = [
+    { href: '/admin', label: 'Dashboard', icon: 'home' as const, badge: null, badgeAlert: false },
+    { href: '/admin/estoque', label: 'Estoque', icon: 'box' as const, badge: lowStock > 0 ? String(lowStock) : null, badgeAlert: lowStock > 0 },
+    { href: '/admin/pedidos', label: 'Pedidos', icon: 'bag' as const, badge: openOrders > 0 ? String(openOrders) : null, badgeAlert: false },
+    { href: '/admin/materias', label: 'Matérias-Primas', icon: 'layers' as const, badge: null, badgeAlert: false },
+    { href: '/admin/producao', label: 'Produção', icon: 'wrench' as const, badge: null, badgeAlert: false },
+  ]
+
+  return (
+    <aside className={`sidebar ${mobileOpen ? 'mobile-open' : ''}`} id="admin-sidebar">
+      <div className="sidebar-brand">
+        <span className="sidebar-logo">
+          <Image
+            src="/images/logo/logo-v2.png"
+            alt=""
+            width={32}
+            height={32}
+            aria-hidden="true"
+          />
+        </span>
+        <span className="sidebar-brand-text">
+          <span className="sidebar-brand-name">Ateliê Exemplo</span>
+          <span className="sidebar-brand-sub">Painel administrativo</span>
+        </span>
+        <button
+          className="sidebar-collapse-btn"
+          onClick={onToggleCollapsed}
+          title={collapsed ? 'Expandir menu' : 'Recolher menu'}
+          aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+          aria-expanded={!collapsed}
+          aria-controls="admin-sidebar"
+          id="btn-sidebar-collapse"
+          data-testid="btn-sidebar-collapse"
+        >
+          <AdminIcon name={collapsed ? 'chevRight' : 'chevLeft'} size={14} />
+        </button>
+      </div>
+
+      <div className="sidebar-section-label">Operação</div>
+      <nav className="sidebar-nav">
+        {primaryNav.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className={`sidebar-item ${isActive(item.href) ? 'active' : ''}`}
+            title={collapsed ? item.label : undefined}
+            id={`sidebar-nav-${item.href.replace('/admin/', '').replace('/admin', 'dashboard')}`}
+          >
+            <AdminIcon name={item.icon} />
+            <span>{item.label}</span>
+            {item.badge && (
+              <span className={`nav-badge ${item.badgeAlert ? 'alert' : ''}`}>
+                {item.badge}
+              </span>
+            )}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="sidebar-section-label">Geral</div>
+      <nav className="sidebar-nav">
+        {secondaryNav.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className={`sidebar-item ${isActive(item.href) ? 'active' : ''}`}
+            title={collapsed ? item.label : undefined}
+            id={`sidebar-nav-${item.href.replace('/admin/', '')}`}
+          >
+            <AdminIcon name={item.icon} />
+            <span>{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+
+      <div className="sidebar-footer">
+        <NotificationsMenu
+          notifications={notifications}
+          collapsed={collapsed}
+          onNavigate={onNavigate}
+        />
+
+        <Link
+          href="/admin/diagnostico"
+          onClick={onNavigate}
+          className={`sidebar-item ${isActive('/admin/diagnostico') ? 'active' : ''}`}
+          title={collapsed ? 'Diagnóstico' : undefined}
+          id="sidebar-nav-diagnostico"
+        >
+          <AdminIcon name="plug" />
+          <span>Diagnóstico</span>
+        </Link>
+
+        <button
+          type="button"
+          className={`sidebar-item ${isActive('/admin/config') ? 'active' : ''}`}
+          title={collapsed ? 'Configurações' : undefined}
+          id="sidebar-nav-config"
+          data-testid="sidebar-nav-config"
+          aria-haspopup="dialog"
+          aria-expanded={configOpen}
+          onClick={() => setConfigOpen((v) => !v)}
+        >
+          <AdminIcon name="settings" />
+          <span>Configurações</span>
+        </button>
+
+        <SidebarPopover
+          open={configOpen}
+          onClose={() => setConfigOpen(false)}
+          labelledBy="sidebar-nav-config"
+        >
+          <div className="sidebar-popover-title">Configurações</div>
+          {CONFIG_SECTIONS.map((s) => (
+            <Link
+              key={s.id}
+              href={configSectionHref(s.id)}
+              id={`popover-config-${s.id}`}
+              className="sidebar-popover-item"
+              onClick={() => { setConfigOpen(false); onNavigate() }}
+            >
+              <AdminIcon name={s.icon} size={14} />
+              <span>
+                <span className="sidebar-popover-label">{s.label}</span>
+                <span className="sidebar-popover-desc">{s.description}</span>
+              </span>
+            </Link>
+          ))}
+        </SidebarPopover>
+
+        <div className="sidebar-user-row">
+          <div className="sidebar-avatar">HC</div>
+          <div className="sidebar-user">
+            <span className="name">Admin</span>
+            <span className="role">Proprietário</span>
+          </div>
+          {/* Não tinha onClick nenhum: clicar em Sair não fazia nada. Como na
+              loja, um clique só não derruba a sessão — abre confirmação. */}
+          <button
+            className="ico-btn"
+            title="Sair"
+            aria-label="Sair"
+            id="btn-logout"
+            data-testid="btn-logout"
+            onClick={onLogoutClick}
+          >
+            <AdminIcon name="logout" size={14} />
+          </button>
+        </div>
+      </div>
+    </aside>
+  )
+}
