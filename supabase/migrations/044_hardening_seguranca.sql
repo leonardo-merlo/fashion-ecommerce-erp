@@ -18,9 +18,16 @@
 revoke execute on function public.increment_coupon_uses(uuid) from public, anon, authenticated;
 grant  execute on function public.increment_coupon_uses(uuid) to postgres, service_role;
 
--- Sem nenhuma chamada por RPC no código.
-revoke execute on function public.get_variant_bom_data(uuid, integer) from public, anon, authenticated;
-grant  execute on function public.get_variant_bom_data(uuid, integer) to postgres, service_role;
+-- Sem nenhuma chamada por RPC no código. A função foi criada direto no banco
+-- de produção e nunca entrou numa migration, então num banco montado do zero
+-- ela não existe: o guarda evita que a 044 quebre o setup local.
+do $$
+begin
+  if to_regprocedure('public.get_variant_bom_data(uuid, integer)') is not null then
+    revoke execute on function public.get_variant_bom_data(uuid, integer) from public, anon, authenticated;
+    grant  execute on function public.get_variant_bom_data(uuid, integer) to postgres, service_role;
+  end if;
+end $$;
 
 -- Função do gatilho on_auth_user_created em auth.users. O EXECUTE de gatilho é
 -- verificado na criação do trigger, não a cada disparo; o grant explícito para
@@ -30,8 +37,14 @@ grant  execute on function public.handle_new_user() to postgres, service_role, s
 
 -- Função do event trigger ensure_rls (ddl_command_end). Event trigger não passa
 -- pelo grant dos papéis de aplicação.
-revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
-grant  execute on function public.rls_auto_enable() to postgres;
+-- Ela vem da plataforma Supabase, não de uma migration deste repositório.
+do $$
+begin
+  if to_regprocedure('public.rls_auto_enable()') is not null then
+    revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
+    grant  execute on function public.rls_auto_enable() to postgres;
+  end if;
+end $$;
 
 -- ─── 2. search_path fixo ─────────────────────────────────────────────────────
 -- Todas são SECURITY INVOKER e nenhuma referencia objeto fora de `public`
