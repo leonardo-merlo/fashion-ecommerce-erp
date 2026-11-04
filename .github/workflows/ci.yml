@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   app:
-    name: Lint, type-check and build
+    name: Lint, type-check, unit tests and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - run: npm test
       # The build only needs the Supabase variables to exist: no page queries the
       # database at build time. Integrations without credentials stay disabled.
       - run: npm run build

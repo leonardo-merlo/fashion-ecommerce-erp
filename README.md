@@ -79,7 +79,7 @@ flowchart LR
 - **UI:** Tailwind CSS 3, Radix UI primitives (shadcn/ui style), Leaflet
 - **Data:** Supabase (PostgreSQL, Auth, Storage), Row Level Security, business rules in PL/pgSQL functions, 48 SQL migrations
 - **Integrations:** Mercado Pago SDK, Resend; REST clients for Melhor Envio, Correios, Focus NFe and ViaCEP
-- **Testing:** SQL tests on PostgreSQL 17, Playwright (E2E)
+- **Testing:** Vitest (unit), SQL tests on PostgreSQL 17, Playwright (E2E)
 - **CI:** GitHub Actions
 
 ## Key technical decisions
@@ -98,9 +98,12 @@ flowchart LR
 
 | Layer | Where | How to run | In CI |
 |---|---|---|---|
+| Unit | `lib/**/*.test.ts` (Vitest) | `npm test` | yes |
 | Database | `supabase/tests/*.test.sql` | `npm run test:db` | yes |
 | E2E | `e2e/*.spec.ts` (Playwright) | `npm run test:e2e` | no |
 | Static | ESLint, TypeScript | `npm run lint`, `npm run typecheck` | yes |
+
+**Unit tests.** Vitest, next to the file they test, on the pure functions where a wrong answer costs money or a rejected invoice: the NF-e payload (CFOP per item, totals rounded to cents, CPF vs. CNPJ fields, flat emitter fields, missing NCM or address), CPF/CNPJ/CEP validation, the shipping option id that travels through the browser, how cart items are packed into one parcel, and reading env values pasted with an inline comment.
 
 **Database tests.** `scripts/test-db.sh` creates a throwaway PostgreSQL database, applies the Supabase stubs (`supabase/tests/supabase-stubs.sql`), all migrations and the seed, then runs each `*.test.sql`. Each test runs in a transaction that is rolled back and fails the run on the first broken assertion. They cover production order completion and revert, the refusal paths (missing material, undefined color, unregistered material, double completion, revert after sale) and sale/return stock movements. Needs a local PostgreSQL reachable through the usual `PGHOST`/`PGUSER`/`PGPASSWORD` variables, with a user that can create databases and roles.
 
