@@ -1,0 +1,2 @@
+# Scripts de shell rodam no Linux do CI e no Git Bash: CRLF quebra o bash.
+*.sh text eol=lf
