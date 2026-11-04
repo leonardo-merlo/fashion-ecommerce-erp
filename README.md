@@ -94,6 +94,10 @@ flowchart LR
 
 **Fiscal address and shipping origin are different things.** The company's registered address decides the invoice's CFOP (in-state vs. interstate sale code); the place the parcel leaves from decides the shipping quote. They used to be the same environment variables. They are now separate fields, read through one module: invoice issuance fails closed when the fiscal address is incomplete, while the shipping origin falls back to the previous values, because stopping sales is worse than quoting from yesterday's address. Quote and label purchase call the same function, so they can no longer disagree.
 
+## Development with an AI agent
+
+The code was written with Claude Code as the coding agent, under my direction and review. [`CLAUDE.md`](CLAUDE.md) is the instruction file it works from (sanitized here): the business rules that are not visible in the code, the mistakes that already cost time once, and the checks to run before a change counts as done. Changes go through pull requests with CI.
+
 ## Testing
 
 | Layer | Where | How to run | In CI |
