@@ -136,7 +136,7 @@ export default function AfiliadaEntrarPage() {
       >
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Image
-            src="/images/logo/logo-v2.png"
+            src="/images/logo/logo.svg"
             alt=""
             width={56}
             height={56}

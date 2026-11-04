@@ -64,7 +64,7 @@ export function AdminSidebar({
       <div className="sidebar-brand">
         <span className="sidebar-logo">
           <Image
-            src="/images/logo/logo-v2.png"
+            src="/images/logo/logo.svg"
             alt=""
             width={32}
             height={32}

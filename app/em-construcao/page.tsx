@@ -23,7 +23,7 @@ export default function EmConstrucaoPage() {
       }}
     >
       <Image
-        src="/images/logo/logo-v2.png"
+        src="/images/logo/logo.svg"
         alt="Ateliê Exemplo"
         width={120}
         height={120}
