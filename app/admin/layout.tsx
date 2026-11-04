@@ -1,13 +1,13 @@
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import { AdminShell } from '@/components/admin/admin-shell'
 import { getSidebarCounts } from '@/lib/supabase/admin-queries'
 import { getAdminNotifications } from '@/lib/server/notifications'
 import './admin.css'
 
 // Inter era carregada por @import de CDN dentro do CSS — bloqueava o render
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
+const inter = localFont({
+  src: '../fonts/inter-latin.woff2',
+  weight: '400 600',
   variable: '--font-inter',
   display: 'swap',
 })
