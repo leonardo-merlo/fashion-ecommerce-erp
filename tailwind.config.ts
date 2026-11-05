@@ -11,11 +11,11 @@ import type { Config } from 'tailwindcss'
  *  - No Tailwind compilado, max-w-* usa theme.maxWidth separadamente.
  *  - Por isso `container-max` aparece em AMBOS: spacing e maxWidth.
  *
- * Fontes necessárias no layout.tsx (next/font ou Google Fonts):
- *  - Playfair Display (400, 600, 700 + italic)
- *  - Be Vietnam Pro (400, 600)
- *  - Work Sans (600)
- *  - Material Symbols Outlined (icon font)
+ * Fontes carregadas com next/font/local a partir de app/fonts/:
+ *  - Fraunces (400–600 + italic) → --font-playfair, em app/layout.tsx
+ *  - Mulish (400–700) → --font-be-vietnam, em app/layout.tsx
+ *  - Inter (400–600) → --font-inter, só no painel admin (app/admin/layout.tsx)
+ *  Os nomes das variáveis vêm das fontes do protótipo e foram mantidos.
  */
 const config: Config = {
   darkMode: 'class',
@@ -133,7 +133,7 @@ const config: Config = {
 
       // ─── Família tipográfica ───────────────────────────────────────────────
       // Cada papel tipográfico tem sua fonte mapeada.
-      // Instalar via next/font/google no app/layout.tsx.
+      // As variáveis são definidas por next/font/local no app/layout.tsx.
       fontFamily: {
         'display-lg':        ['var(--font-playfair)', 'Georgia', 'serif'],
         'display-lg-mobile': ['var(--font-playfair)', 'Georgia', 'serif'],

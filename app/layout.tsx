@@ -1,18 +1,21 @@
 import type { Metadata } from 'next'
-import { Fraunces, Mulish } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
+// Fontes versionadas no repositório: com next/font/google o build baixava do
+// Google na hora e falhava no CI quando o download falhava.
+const fraunces = localFont({
+  src: [
+    { path: './fonts/fraunces-latin.woff2', weight: '400 600', style: 'normal' },
+    { path: './fonts/fraunces-italic-latin.woff2', weight: '400 600', style: 'italic' },
+  ],
   variable: '--font-playfair',
   display: 'swap',
 })
 
-const mulish = Mulish({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+const mulish = localFont({
+  src: './fonts/mulish-latin.woff2',
+  weight: '400 700',
   variable: '--font-be-vietnam',
   display: 'swap',
 })
